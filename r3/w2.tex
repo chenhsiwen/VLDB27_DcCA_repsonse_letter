@@ -1,0 +1,14 @@
+\paragraph{R3-W2 (Multi-modality insufficiently grounded; everything embedded then filtered as post-processing).}
+
+\begin{itemize}[leftmargin=1.2em, itemsep=1pt, topsep=2pt]
+\item \textit{W2: ``The multi-modality is insufficiently grounded \dots the authors first embed everything into vectors, then \dots retrieve nearest neighbours, and apply feasibility filters as a post-processing step \dots The paper would benefit from explicitly showing how the modality-specific constraints (Section~3) are incorporated into the final Set filtering stage or even proposing how to integrate modality-specific constraints into index construction.''}
+\end{itemize}
+\smallskip
+
+\noindent\textbf{Response.}
+We agree with the observation and state the scope honestly: the current prototype uses a shared embedding as a proposal mechanism with post-filtering. This matches the position already in Section~3, that similarity search \emph{``serves only as a proposal mechanism, while correctness is determined through cross-modal validation that enforces feasibility and consistency,''} making multimodal counterfactual querying \emph{``inherently verification-driven.''} We make the mechanism concrete with a per-modality constraint table (Table~\ref{tab:modality}) specifying, for each modality, the constraint type, edit representation, and enforcement point, and we propose pushing modality-specific constraints into candidate generation and index construction (e.g., partitioning by immutable attributes for tabular data, dynamics-aware validity for temporal data~\cite{senin2008dynamic}, structural predicates for graphs~\cite{kipf2016semi}). The important distinction is that DcCA exposes modality constraints as declarative query semantics: the current prototype realizes them through validation, but the abstraction enables future optimizers to push these constraints into indexing and retrieval, analogous to how relational databases evolved from filtering after scans to predicate-aware query optimization.
+
+\noindent\emph{Revision to Section~3 (cross-modal consistency and index integration):}
+\begin{quote}
+\textcolor{blue}{Modality-specific constraints are enforced at the stage where they are cheapest and sound: attribute rules and immutability during candidate generation and indexing; dynamics, structural, and semantic constraints during validation. For multimodal queries, $\omega$ adds a cross-modal consistency predicate~\cite{chen2019cross}: a candidate must satisfy each modality's constraints and be jointly consistent across views. Rather than post-filtering shared-embedding neighbors, the research goal is to integrate these constraints into index construction so infeasible candidates are pruned during retrieval.}
+\end{quote}

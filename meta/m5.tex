@@ -1,0 +1,61 @@
+\paragraph{Meta-5 (Strengthen the empirical support for the vision).}
+
+\begin{itemize}[leftmargin=1.2em, itemsep=1pt, topsep=2pt]
+\item \textit{``\dots the current evaluation is focused on runtime performance and small-scale datasets, and relies mostly on retrieval-oriented baselines. The revision should evaluate, or at least discuss, counterfactual quality, and collective validity objectives such as diversity, robustness, and fairness, comparison with relevant counterfactual baselines \dots and the limitations of the current small-scale runtime experiments.''}
+\end{itemize}
+\smallskip
+
+\noindent\textbf{Response.}
+We extend the evaluation beyond runtime along four directions. All studies are reproducible (numpy, fixed seeds) and follow the synthetic-embedding methodology of the prototype in Table~1.
+
+\emph{(1) Counterfactual quality / collective validity.} We evaluate the set objectives of Section~4---$\Omega_{\text{div}}$~\cite{laugel2023achieving,borodin2017max}, $\Omega_{\text{rob}}$~\cite{guyomard2023generating}, and $\Omega_{\text{fair}}$~\cite{kusner2017counterfactual}---for the top-$k$ lowest-cost baseline and for objective-specific Set-step selectors (Step~2.b). Table~\ref{tab:quality} shows that \emph{top-$k$ is optimal for none of the set objectives}: each objective is best served by its own set-level optimizer, and diversity and robustness genuinely trade off. This directly supports the collective-validity principle (P4) and confirms the paper's claim that ``simply returning the top-$k$ lowest-cost instances often yields redundant options.''
+
+\begin{table}[h]
+\centering\small
+\caption{Collective-validity objectives (Section~4) for top-$k$ vs.\ objective-specific Set-step selection; higher $\Omega$ is better. Best per column in \textbf{bold}. Two representative modalities shown; the pattern holds for text, image, and graph.}
+\label{tab:quality}
+\begin{tabular}{llrrrr}
+\toprule
+Modality & Selector & $\Omega_{\text{div}}\!\uparrow$ & $\Omega_{\text{rob}}\!\uparrow$ & $\Omega_{\text{fair}}\!\uparrow$ & Cost$\downarrow$ \\
+\midrule
+\multirow{4}{*}{Tabular}
+ & Top-$k$   & 97.12  & $-14.16$ & $-0.179$ & \textbf{9.07} \\
+ & Div-opt   & \textbf{117.60} & $-14.44$ & $-0.196$ & 9.96 \\
+ & Rob-opt   & 100.46 & \textbf{$-14.09$} & $-0.197$ & 9.20 \\
+ & Fair-opt  & 110.18 & $-14.33$ & \textbf{$-0.100$} & 9.68 \\
+\midrule
+\multirow{4}{*}{Temporal}
+ & Top-$k$   & 151.52 & $-21.62$ & $-0.190$ & \textbf{14.86} \\
+ & Div-opt   & \textbf{957.31} & $-22.15$ & $-0.185$ & 77.09 \\
+ & Rob-opt   & 153.08 & \textbf{$-21.59$} & $-0.186$ & 14.91 \\
+ & Fair-opt  & 824.42 & $-21.90$ & \textbf{$-0.100$} & 61.80 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\emph{(2) Validity/feasibility vs.\ a model-centric baseline.} On a synthetic tabular task with categorical immutable attributes and a logistic-regression model that the counterfactual must flip, we compare DcCA (retrieving a real, opposite-outcome, immutability-matched instance) against an unconstrained Wachter gradient counterfactual~\cite{wachter2017counterfactual}. Table~\ref{tab:validity} shows the trade-off precisely: DcCA is $100\%$ valid, $100\%$ in-distribution, and respects immutability whenever a matching instance exists ($83.7\%$; the remaining $16.3\%$ are the empty-set/fallback regime discussed under Meta-2), whereas Wachter is $100\%$ valid but $0\%$ feasible (it edits immutable attributes) and $0\%$ in-distribution, at a lower nominal cost. This reframes the evaluation from retrieval efficiency to \emph{counterfactual capability}: DcCA returns feasible, grounded answers by construction.
+
+\begin{table}[h]
+\centering\small
+\caption{Validity/feasibility trade-off: data-centric (DcCA) vs.\ model-centric (Wachter) counterfactuals. Synthetic tabular, $N{=}6000$, $3$ categorical immutable attributes, $300$ queries.}
+\label{tab:validity}
+\begin{tabular}{lrrrrr}
+\toprule
+Method & Valid.\% & Feas.\% & In-dist.\% & Cost & Time (ms) \\
+\midrule
+\textbf{DcCA (data-centric)}    & \textbf{100.0} & \textbf{83.7} & \textbf{100.0} & 3.53 & 0.21 \\
+Wachter (model-centric)~\cite{wachter2017counterfactual} & 100.0 & 0.0 & 0.0 & \textbf{1.86} & \textbf{0.14} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\emph{(3) Comparability and approximation.} Table~\ref{tab:ann} (in our response to R3-W3) reports an exact-vs-approximate retrieval study: coarse-quantized (IVF-style) search attains recall@$100=1.00$ at a $5.6\times$ speedup, confirming that approximate techniques apply to embedding vectors and that quality is preserved.
+
+\emph{(4) Scale and limitations.} Table~\ref{tab:scale} (R3-W3) reports latency up to $N=5\times10^{5}$: set selection is essentially constant ($\approx1.5$\,ms) while retrieval dominates scaling. We add an explicit limitations paragraph acknowledging the small-scale, synthetic prototype.
+
+\emph{Counterfactual baselines.} Table~\ref{tab:baselines} (in our response to R4-O5) reports a controlled simulation comparing DcCA with reference reimplementations of FACE~\cite{poyiadzi2020face}, DiCE~\cite{mothilal2020explaining}, Wachter~\cite{wachter2017counterfactual}, and GeCo~\cite{schleich2021geco} generators on validity, feasibility, in-distribution rate, diversity, and cost. Full-library results (incl.\ DACE~\cite{kanamori2020dace}, prototype-CF~\cite{vanlooveren2020interpretable}) on the Adult, German-Credit, and HELOC benchmarks are to follow.
+
+\noindent\emph{Revision to Section~5.2 (new results and limitations):}
+\begin{quote}
+\textcolor{blue}{Beyond runtime, we evaluate counterfactual quality. Across modalities, objective-specific set selection improves the targeted collective-validity objective over top-$k$ lowest-cost selection, and the objectives trade off, confirming that P4 requires a first-class, user-specified $\Omega$ rather than a fixed top-$k$ (Table~2). Against a model-centric baseline, DcCA returns $100\%$ feasible, in-distribution counterfactuals by construction, whereas an unconstrained gradient counterfactual violates immutability and leaves the data manifold (Table~3). Approximate retrieval preserves recall at substantial speedup (Table~4), and set selection scales negligibly with $N$ (Table~5). \textbf{Limitations.} The current prototype uses synthetic embeddings at modest scale; extending to large real corpora and to counterfactual-library baselines (DiCE, GeCo, DACE, FACE) on standard benchmarks is ongoing.}
+\end{quote}

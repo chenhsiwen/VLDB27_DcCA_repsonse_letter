@@ -1,0 +1,15 @@
+\paragraph{R2-W2, R2-D2 (Missing critical evidence; empty-set fallback).}
+
+\begin{itemize}[leftmargin=1.2em, itemsep=1pt, topsep=2pt]
+\item \textit{W2: ``what about missing critical evidence for the counterfactual? The core premise of a data-centric approach requires observed instances that support alternatives.''}
+\item \textit{D2: ``The data-central approach requires the counterfactual evidence to be present in $\mathcal{D}$. Some discussions around this (e.g., empty-set fallback) would be interesting.''}
+\end{itemize}
+\smallskip
+
+\noindent\textbf{Response.}
+By Eq.~(1), an instance is admissible \emph{``if and only if $\omega(\mathbf{x}_q,\mathbf{x})<\infty$''}; when $\omega(q)=\varnothing$, DcCA returns an empty set that \emph{certifies} no feasible, outcome-changing real instance exists---a verifiable statement generative methods cannot make~\cite{wachter2017counterfactual,mothilal2020explaining}. Our validity study quantifies this: in Table~\ref{tab:validity}, a feasible immutability-matched counterfactual exists for $83.7\%$ of queries, and the remaining $16.3\%$ fall into exactly this empty-set/fallback regime. We add a graded fallback (constraint-relaxation ladder, partial sets, flagged generative hand-off).
+
+\noindent\emph{Revision to Section~2 (new paragraph ``Evidence availability and failure behavior''):}
+\begin{quote}
+\textcolor{blue}{When $\omega(q)=\varnothing$, DcCA returns the empty set, certifying infeasibility under $\omega$. For $0<|\omega(q)|<k$ it returns a partial set with provenance. Coverage is improved by a graded fallback: a constraint-relaxation ladder reporting the minimal relaxation that restores feasibility, and an explicitly flagged hand-off to a generative method as an unverified fallback. Data-centric retrieval guarantees realism and verifiability but is bounded by the coverage of $\mathcal{D}$, whereas generative methods always return an answer at the cost of feasibility; the two are complementary, and coverage is measurable and grows with $\mathcal{D}$.}
+\end{quote}

@@ -1,0 +1,32 @@
+\paragraph{R4-O5, R4-W3 (Baselines are general retrieval/indexing; experiments show retrieval efficiency, not counterfactual capability).}
+
+\begin{itemize}[leftmargin=1.2em, itemsep=1pt, topsep=2pt]
+\item \textit{O5: ``The current baselines (e.g., DuckDB, KD-Tree, BM25) are mainly general retrieval/indexing methods. Therefore, the experiments mainly demonstrate retrieval efficiency rather than counterfactual capability. The authors are encouraged to include more targeted counterfactual baselines, or discuss why such comparisons are difficult.''}
+\item \textit{W3 (part): ``\dots evaluation baselines would benefit from more detailed justification and discussion.''}
+\end{itemize}
+\smallskip
+
+\noindent\textbf{Response.}
+We agree that the original baselines measure retrieval efficiency, not counterfactual capability, and we add a capability-oriented evaluation. Table~\ref{tab:baselines} reports a controlled simulation comparing DcCA against reference reimplementations of representative counterfactual generators---a data-grounded feasible-path method (FACE~\cite{poyiadzi2020face}), a diverse gradient method (DiCE~\cite{mothilal2020explaining}), an unconstrained gradient method (Wachter~\cite{wachter2017counterfactual}), and a genetic search (GeCo~\cite{schleich2021geco})---on validity, feasibility (immutability), in-distribution rate, set diversity, cost, and runtime. The pattern is clear: data-grounded methods are in-distribution by construction, but only DcCA also respects immutability (via immutability-matched retrieval), while model-centric generators achieve low nominal cost yet are infeasible ($0\%$) and off-manifold. DcCA also yields the most diverse valid set. We retain the retrieval/indexing baselines (DuckDB, KD-Tree, BM25) to characterize the efficiency dimension.
+
+\begin{table}[h]
+\centering\small
+\caption{Counterfactual capability: DcCA vs.\ model-centric generators. \emph{Controlled simulation on synthetic tabular data ($N{=}6000$, $3$ categorical immutable attributes, $k{=}5$, $150$ queries) with reference reimplementations of each method's core mechanism---not the released libraries and not UCI data. Full-library results (incl.\ DACE~\cite{kanamori2020dace}, prototype-CF~\cite{vanlooveren2020interpretable}) on Adult, German-Credit, and HELOC are to follow.} Higher is better except Cost.}
+\label{tab:baselines}
+\begin{tabular}{lrrrrr}
+\toprule
+Method & Valid.\% & Feas.\% & In-dist.\% & $\Omega_{\text{div}}$ & Cost \\
+\midrule
+\textbf{DcCA (data-centric)}        & 100.0 & \textbf{64.7} & \textbf{100.0} & \textbf{27.08} & 4.09 \\
+FACE (data-path)~\cite{poyiadzi2020face}      & 100.0 & 1.9  & 100.0 & 17.29 & 2.83 \\
+DiCE (diverse grad)~\cite{mothilal2020explaining}   & 100.0 & 0.0  & 1.1   & 9.32  & 1.73 \\
+Wachter (grad)~\cite{wachter2017counterfactual}        & 100.0 & 0.0  & 0.0   & 2.27  & \textbf{1.89} \\
+GeCo (genetic)~\cite{schleich2021geco}        & 80.8  & 0.0  & 0.7   & 20.24 & 1.77 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent\emph{Revision to Section~5.2:}
+\begin{quote}
+\textcolor{blue}{We distinguish two baseline categories with different purposes: retrieval/indexing baselines (DuckDB, KD-Tree, BM25) characterize efficiency, while counterfactual generators (FACE, DiCE, Wachter, GeCo) characterize counterfactual capability. On the latter, DcCA returns feasible, grounded, in-distribution counterfactuals by construction and the most diverse valid set, whereas model-centric methods achieve smaller nominal distance at the cost of feasibility and realism (Table~4).}
+\end{quote}

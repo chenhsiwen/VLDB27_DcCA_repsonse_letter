@@ -1,0 +1,48 @@
+\paragraph{R3-W3 (Preliminary results: runtime-only, empty Set column for baselines, comparability/ANN, small datasets).}
+
+\begin{itemize}[leftmargin=1.2em, itemsep=1pt, topsep=2pt]
+\item \textit{W3: ``\dots the evaluation is limited to runtime \dots the quality of the returned sets is not evaluated, while the paper proposes three metrics \dots the Set step in Table~1 is left unjustifiably empty for the baselines \dots approximate techniques for nearest neighbour search would also be highly applicable for embedding vectors \dots the dataset sizes are quite small (N=100 for images, N=500 for text/temporal) \dots''}
+\end{itemize}
+\smallskip
+
+\noindent\textbf{Response.} We address the four issues in turn.
+
+\emph{(1) Set quality (not only runtime).} We now evaluate the three Section~4 objectives. Table~\ref{tab:quality} (in our response to Meta-5) shows that objective-specific set selection improves $\Omega_{\text{div}}$, $\Omega_{\text{rob}}$, and $\Omega_{\text{fair}}$ over top-$k$ lowest-cost, and that top-$k$ is optimal for none.
+
+\emph{(2) Empty Set column.} The blank was because the baseline systems do not natively perform set-level selection. In the revision we give each baseline a fair Set step (generic top-$k$ with post-hoc diversity re-ranking) and report its set quality; where a system genuinely cannot, we mark it N/A with an explicit footnote rather than leaving a blank.
+
+\emph{(3) Comparability and ANN.} We agree that approximate nearest-neighbor search applies to embedding vectors. Table~\ref{tab:ann} reports an exact-vs-approximate study: coarse-quantized (IVF-style) retrieval reaches recall@$100=0.94$ at $9.4\times$ and $1.00$ at $5.6\times$ speedup over exact search, so quality is preserved under approximation. We also state the determinism and embedding-dependence caveats explicitly.
+
+\begin{table}[h]
+\centering\small
+\caption{Exact vs.\ approximate (IVF-style) retrieval; $N{=}10000$, $d{=}64$, $k{=}100$. Exact search: $1.65$\,ms/query.}
+\label{tab:ann}
+\begin{tabular}{rrr}
+\toprule
+nprobe & Recall@100 & Speedup vs.\ exact \\
+\midrule
+1  & 0.425 & 22.7$\times$ \\
+4  & 0.940 & 9.4$\times$ \\
+8  & 1.000 & 5.6$\times$ \\
+16 & 1.000 & 2.7$\times$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\emph{(4) Scale.} Table~\ref{tab:scale} reports latency up to $N=5\times10^{5}$: set selection is essentially constant ($\approx1.5$\,ms), while brute-force retrieval grows linearly---precisely the cost a constraint-aware index is meant to reduce. We add a limitations paragraph acknowledging the small-scale, synthetic prototype and the plan to scale to large real corpora.
+
+\begin{table}[h]
+\centering\small
+\caption{Scalability of online query answering (search + set selection), $d{=}64$. Set selection is near-constant; retrieval dominates scaling.}
+\label{tab:scale}
+\begin{tabular}{rrrr}
+\toprule
+$N$ & Search (ms) & Set-step (ms) & Total (ms) \\
+\midrule
+1{,}000    & 0.10  & 1.47 & 1.57 \\
+10{,}000   & 1.25  & 1.49 & 2.74 \\
+100{,}000  & 15.40 & 1.46 & 16.87 \\
+500{,}000  & 129.09 & 1.51 & 130.60 \\
+\bottomrule
+\end{tabular}
+\end{table}

@@ -1,0 +1,14 @@
+\paragraph{R4-O3 (Validation may be expensive under complex constraints; discuss validation cost).}
+
+\begin{itemize}[leftmargin=1.2em, itemsep=1pt, topsep=2pt]
+\item \textit{O3: ``\dots validation itself may be expensive under complex constraints. The authors are encouraged to further discuss the validation cost.''}
+\end{itemize}
+\smallskip
+
+\noindent\textbf{Response.}
+The coarse-to-fine design (Section~2.2) bounds validation cost. Cheap attribute/metric checks are pushed into candidate generation (Step~2.a), and expensive execution-level (temporal, graph) or semantic (text, image) validation is applied only to the candidate pool $\mathcal{A}_\omega(q)$ of size $m\ge k$; validation cost therefore scales with $|\mathcal{A}_\omega|$, not $|\mathcal{D}|$. Because the pool is returned \emph{``in nondecreasing cost order for early pruning,''} validation can stop once $k$ admissible answers are confirmed. Table~\ref{tab:scale} shows the online selection cost is near-constant in $N$, consistent with validation being confined to the small pool.
+
+\noindent\emph{Revision to Section~2.2 (validation cost):}
+\begin{quote}
+\textcolor{blue}{Feasibility validation is tiered. Cheap checks (attribute rules, metric thresholds) are evaluated during candidate generation, so most infeasible instances are pruned before any costly check. Expensive execution- or semantics-level validation is applied only to the pool $\mathcal{A}_\omega(q)$ ($|\mathcal{A}_\omega|=m\ge k$), and, since candidates are ordered by nondecreasing cost, validation terminates once $k$ admissible answers are found. Validation cost thus scales with $m$, not $|\mathcal{D}|$; enlarging $m$ trades validation effort for a higher chance of filling the set, a controllable accuracy/latency knob (P3).}
+\end{quote}

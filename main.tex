@@ -1,0 +1,40 @@
+\documentclass{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{tikz}
+\usepackage{multirow}
+\newcommand{\Arrow}[1]{\ensuremath{\parbox{#1}{\tikz{\draw[->](0,0)--(#1,0);}}}}
+
+\newcommand{\rev}[1]{{\color{blue}``#1''}}
+\newcommand{\jp}[1]{{\color{blue} [\textbf{JP}: #1]}}
+\newcommand{\revision}[1]{{\color{red} [\textbf{Possible revision}: #1]}}
+
+\begin{document}
+\sloppy
+
+\title{\textbf{Response to Reviewer Comments}\\
+\large ``Towards Data-Centric Counterfactual Analysis'' [Vision] (Paper ID 167)}
+
+\author{Bryce Bern, Hsi-Wen Chen, Ming-Syan Chen, Tianlong Chen, and Jian Pei}
+
+\maketitle
+
+We sincerely thank the meta-reviewer and all reviewers for their constructive and insightful feedback. By addressing those comments, we substantially improve our paper. We are encouraged that the reviewers find the vision ``timely and an important problem'' with appreciated ``novelty and the potential impact.'' In this document, we first respond to the five revision items specified in the meta-review, then address the weak points and detailed-evaluation points individually raised by each reviewer. All changes in the revised manuscript are highlighted in {\color{blue}blue}.
+
+To substantiate the empirical claims, we conducted \textbf{a new set of experiments} that extend our runtime study (Table~1) with counterfactual \emph{quality}: collective-validity objectives (diversity, robustness, fairness), a validity/feasibility comparison against a model-centric counterfactual method, an exact-vs-approximate retrieval study, and a scalability study. These experiments are reproducible (numpy, fixed seeds) and are summarized in Tables~\ref{tab:quality}--\ref{tab:scale} in this document.
+
+\input{meta/main}
+\input{r2/main}
+\input{r3/main}
+\input{r4/main}
+
+\bibliographystyle{ACM-Reference-Format}
+\bibliography{reference}
+
+\end{document}

@@ -1,0 +1,15 @@
+\paragraph{R2-W1, R2-D1 (Index creation w.r.t.\ $|\mathcal{W}|$ and update overheads).}
+
+\begin{itemize}[leftmargin=1.2em, itemsep=1pt, topsep=2pt]
+\item \textit{W1: ``more analysis and discussion around the index creation/update overheads.''}
+\item \textit{D1: ``The constraint-aware index creation (w.r.t.\ $|\mathcal{W}|$) and update overheads discussion could be interesting.''}
+\end{itemize}
+\smallskip
+
+\noindent\textbf{Response.}
+We add an explicit cost analysis. As stated in Section~2.2, the index design follows the structure of $\omega$: metric-aware structures (\emph{``weighted KD-trees, ball trees, cover trees''})~\cite{reif2022scalable} for dimension-reweighting $\omega$, and \emph{``partitioned indices, bitmap filtering, or inverted indices''}~\cite{lee2019constraint,chan1998bitmap,babenko2014inverted} for discrete-constraint $\omega$. Rather than one index per specification, $\mathcal{W}$ is partitioned into a small number of structural families that share an index, so construction cost scales with the number of families, not $|\mathcal{W}|$, and is amortized across queries. Our scalability study (Table~\ref{tab:scale}) shows the online set-selection cost is essentially constant in $N$, so retrieval and index maintenance dominate cost, motivating the constraint-aware index.
+
+\noindent\emph{Revision to Section~5 (new paragraph ``Practical realization and costs''):}
+\begin{quote}
+\textcolor{blue}{$\mathcal{W}$ is partitioned into structural families, each served by one reusable index; index construction is therefore amortized across queries and scales with the number of families rather than $|\mathcal{W}|$. Under insertions/deletions/updates to $\mathcal{D}$ the index is maintained incrementally, and a query whose $\omega\notin\mathcal{W}$ falls back to a linear scan, so the cost model degrades gracefully.}
+\end{quote}

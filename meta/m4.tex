@@ -1,0 +1,32 @@
+\paragraph{Meta-4 (Ground the multimodal contribution).}
+
+\begin{itemize}[leftmargin=1.2em, itemsep=1pt, topsep=2pt]
+\item \textit{``Explain how modality-specific constraints are represented and enforced \dots clarify whether DcCA performs true multimodal counterfactual reasoning or mainly shared-embedding retrieval followed by filtering, and how cross-modal constraints and consistency are handled.''}
+\end{itemize}
+\smallskip
+
+\noindent\textbf{Response.}
+We state the scope of the prototype honestly. The current DcCA prototype uses a shared embedding (CLIP~\cite{radford2021learning}) as a \emph{proposal} mechanism with feasibility applied as a post-filter; it does not yet perform full cross-modal constraint enforcement. This is consistent with the position already taken in Section~3, where we write that \emph{``similarity search in joint or modality-specific embeddings serves only as a proposal mechanism, while correctness is determined through cross-modal validation that enforces feasibility and consistency,''} so that \emph{``multi-modal counterfactual querying is inherently verification-driven.''} As a Vision paper, our contribution is to identify this gap and specify how modality-specific constraints and cross-modal consistency should be represented and enforced; we make this concrete with the table below and a cross-modal consistency predicate. The important distinction is that DcCA exposes modality constraints as declarative query semantics: the current prototype realizes them through validation, but the abstraction enables future optimizers to push these constraints into indexing and retrieval, analogous to how relational databases evolved from filtering after scans to predicate-aware query optimization.
+
+\noindent\emph{New per-modality constraint table (Section~3):}
+\begin{table}[h]
+\centering\small
+\caption{Modality-specific semantics: dimension of change, constraint type, edit representation, and enforcement point.}
+\label{tab:modality}
+\begin{tabular}{llll}
+\toprule
+Modality & Constraint type & Edit $\Delta$ & Enforced at \\
+\midrule
+Tabular  & column rules, immutability & attribute deltas & index + candidate gen. \\
+Temporal & dynamics / execution validity~\cite{senin2008dynamic} & valid sub-trajectory & execution-level validation \\
+Graph    & connectivity, typing, capacity~\cite{kipf2016semi} & structural edits & structural validation \\
+Text     & semantic admissibility & span rewrite & semantic validation \\
+Image    & scene/region semantics & localized edit & semantic validation \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent\emph{Revision to Section~3 (cross-modal consistency; new text):}
+\begin{quote}
+\textcolor{blue}{For multimodal queries, $\omega$ incorporates a cross-modal consistency predicate: a candidate must satisfy each modality's constraints \emph{and} be jointly consistent across modalities~\cite{chen2019cross}, e.g., a tabular attribute edit must imply a consistent change in the associated text and image views. Shared-embedding retrieval only proposes candidates; consistency is confirmed by cross-modal validation, so multimodal counterfactual querying is verification-driven rather than similarity-driven. Crucially, DcCA exposes these modality constraints as \emph{declarative query semantics}: the prototype realizes them through validation, but the abstraction enables future optimizers to push them into indexing and retrieval, analogous to how relational databases evolved from filtering after scans to predicate-aware query optimization. Achieving this---pushing modality-specific and cross-modal constraints into retrieval and index construction rather than post-filtering---is a central open challenge of this vision.}
+\end{quote}
