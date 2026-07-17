@@ -9,7 +9,7 @@
 \noindent\textbf{Response.}
 We now back the collective-validity claim with measurements. Table~\ref{tab:quality} evaluates the Section~4 objectives ($\Omega_{\text{div}},\Omega_{\text{rob}},\Omega_{\text{fair}}$) and shows that top-$k$ lowest-cost selection is optimal for \emph{none} of them, while each objective-specific Set-step selector improves its target; diversity and robustness also trade off. This substantiates that ``simply returning the top-$k$ lowest-cost instances often yields redundant options'' and that P4 requires set-level optimization. For the model-centric trade-off, Table~\ref{tab:validity} compares DcCA with a Wachter counterfactual~\cite{wachter2017counterfactual}: DcCA is $100\%$ valid, $100\%$ in-distribution, and feasible whenever evidence exists ($83.7\%$), whereas the model-centric baseline is $100\%$ valid but $0\%$ feasible and $0\%$ in-distribution at a lower nominal cost. This highlights the complementary trade-off: model-centric methods may achieve lower nominal intervention cost, whereas DcCA emphasizes feasibility, realism, and verifiability. When evidence is lacking, the empty-set/fallback behavior (Meta-2) applies.
 
-\noindent\emph{Revision to Section~5.2:}
+\noindent\emph{Revision (Section~5 summary; details in Appendix~A):}
 \begin{quote}
 \textcolor{blue}{Objective-specific set selection improves the targeted collective-validity objective over top-$k$ (Table~2), and DcCA returns $100\%$ feasible, in-distribution counterfactuals by construction, whereas a model-centric baseline attains lower nominal cost but violates feasibility and leaves the data manifold (Table~3). This makes the trade-off explicit: DcCA trades a modest increase in nominal cost for guaranteed feasibility and verifiability.}
 \end{quote}
