@@ -5,40 +5,24 @@
 \end{itemize}
 \smallskip
 
-\jp{The response still does not directly address the core concern in Meta-1. It mainly argues that the proposed framework has different properties (feasibility, non-metric cost, and set-level objectives), but it does not clearly explain why counterfactual querying is fundamentally a new data management primitive rather than a composition of existing retrieval, filtering, reranking, and subset-selection operators. The revision should focus less on describing the pipeline and more on explaining the new query abstraction and semantics, and why existing database abstractions and optimizers cannot naturally express or optimize this functionality as a first-class query.}
-
-\revision{
-We thank the meta-reviewer for pointing out that the distinction from existing retrieval paradigms was not sufficiently clear. We have substantially revised the paper to make this distinction explicit.
-
-\textbf{Counterfactual querying differs from existing paradigms in several fundamental ways.}
-
-\emph{Compared with constrained retrieval.} Constrained retrieval finds objects satisfying user-specified predicates while optimizing an existing retrieval objective. Counterfactual querying instead asks for feasible \emph{outcome-changing interventions}. The opposite-outcome predicate, admissibility constraints, intervention cost, and explanatory edits are all part of the query semantics, rather than constraints imposed on an existing retrieval problem.
-
-\emph{Compared with vector search.} Vector search retrieves objects that are closest under an embedding-space distance. Counterfactual querying does not optimize embedding similarity. Instead, it optimizes intervention cost $\omega$, which represents real-world effort, may be asymmetric or non-metric, and explicitly distinguishes infeasible interventions by assigning infinite cost.
-
-\emph{Compared with nearest-neighbor search.} Nearest-neighbor search returns the closest tuples according to a predefined metric. Counterfactual querying instead searches only over feasible, opposite-outcome instances,
-$\omega(q)=\{x_i:y_i\neq y_q,\ \omega(x_q,x_i)<\infty\}$, 
-so admissibility and outcome jointly define the search space rather than simply ranking neighbors.
-
-\emph{Compared with filtering.} Existing systems typically retrieve candidates first and then apply filters before or after retrieval. In counterfactual querying, feasibility is not a post-processing step. It defines which instances are legal candidates in the first place, and therefore directly influences query planning, indexing, and candidate generation.
-
-\emph{Compared with subset-selection pipelines.} Existing subset-selection methods diversify or rerank an already retrieved candidate set. Counterfactual querying instead defines the answer as the optimizer of Eq.~(2), where intervention cost and the user-specified set objective $\Omega$ are optimized jointly. Thus, the set objective is part of the query semantics rather than a downstream optimization stage.
-
-\textbf{Why does counterfactual querying require capabilities beyond composing these components?}
-
-Although one may build a pipeline consisting of vector search, filtering, reranking, and subset selection, such a pipeline treats these operators independently. In contrast, counterfactual querying defines a single declarative query whose semantics are jointly determined by the opposite-outcome predicate, admissibility constraints, intervention cost $\omega$, and set objective $\Omega$. Because these components are coupled, they should be visible to the query optimizer as first-class constructs, allowing the system to reason holistically about access paths, constraint pushdown, index construction, candidate generation, and set optimization. A staged pipeline may approximate the desired behavior, but it cannot optimize these coupled semantics as a single query.
-
-Our contribution is therefore not another retrieval pipeline or counterfactual generation algorithm. Rather, we advocate elevating counterfactual reasoning to a \emph{first-class data management primitive}, with its own declarative semantics, optimization opportunities, indexing mechanisms, and execution strategies. We revised Sections~1 and~5.1 accordingly and added Table~1 to make these distinctions explicit.
-}
-
 \noindent\textbf{Response.}
-We clarify that counterfactual querying is not a re-abstraction of a retrieval pipeline. Our goal is not to introduce another counterfactual generation algorithm; the database challenge is to identify the query abstraction, optimization opportunities, indexing requirements, and execution model needed when counterfactual reasoning becomes a recurring data-access primitive. As stated in Section~1, our thesis is that \emph{``counterfactual reasoning should be elevated to a first-class data management primitive, where systems retrieve feasible, outcome-changing alternatives from observed data under explicit constraints, costs, and objectives,''} and that it \emph{``goes beyond nearest-neighbor search---it must enforce label constraints, respect admissibility conditions, incorporate cost-faithful metrics aligned with real interventions, and return informative rather than redundant answers.''} A composition of existing components cannot provide the following three capabilities jointly without losing correctness or efficiency:
-\begin{enumerate}[leftmargin=1.4em, itemsep=1pt, topsep=2pt, label=(\roman*)]
-\item \textbf{Feasibility reshapes the search space; it is not a post-filter.} The feasible target set $\omega(q)=\{\mathbf{x}_i:y_i\neq y_q,\ \omega(\mathbf{x}_q,\mathbf{x}_i)<\infty\}$ (Eq.~1) couples an opposite-outcome predicate with admissibility \emph{before} retrieval. As we note in Section~5.1, existing engines such as pgvector~\cite{pgvector} \emph{``appl[y] filtering after index traversal, which can reduce valid candidates and require repeated scans,''} and post-filtering under structured constraints degrades recall and stability~\cite{dong2011efficient,malkov2018efficient}.
-\item \textbf{Cost faithfulness breaks the metric assumption of indexes.} Under P2, $\omega$ encodes intervention effort with \emph{``infeasible transformations \dots assigned infinite cost, cleanly separating feasibility from effort''}; it is asymmetric and possibly non-metric, so ranking by $\omega$ is not nearest-neighbor ranking in the index's geometric metric.
-\item \textbf{Collective validity is a coupled set objective.} The query optimizes $\Omega(S;q)-\sum_{\mathbf{x}\in S}\omega(\mathbf{x}_q,\mathbf{x})$ (Eq.~2); as Section~4 states, \emph{``simply returning the top-$k$ lowest-cost instances often yields redundant options.''} Our new experiment (Table~\ref{tab:quality}) confirms empirically that top-$k$ selection is optimal for \emph{none} of the set-level objectives.
-\end{enumerate}
-We further position DcCA against feasibility-aware counterfactual methods, in particular FACE~\cite{poyiadzi2020face}, which constructs feasible paths over observed points but remains per-query and model-centric and lacks a first-class query model, cost specification $\omega$, and set objective $\Omega$.
+\hw{We thank the meta-reviewer for pointing out that the distinction from existing retrieval paradigms was not sufficiently clear. Our contribution is not another retrieval pipeline or counterfactual-generation algorithm; it is a new query abstraction. We have substantially revised the paper to make the new semantics---and why existing database abstractions and optimizers cannot naturally express or optimize it---explicit.
+
+\textbf{Counterfactual querying differs from existing paradigms in what it asks and what it optimizes.}
+
+\emph{Compared with constrained retrieval.} Constrained retrieval finds objects that satisfy user-specified predicates while optimizing a fixed retrieval objective. Counterfactual querying instead asks for feasible \emph{outcome-changing interventions}: the opposite-outcome predicate, admissibility constraints, intervention cost, and explanatory edit are part of the query semantics, not constraints layered onto an existing retrieval problem.
+
+\emph{Compared with vector search.} Vector search retrieves objects closest under an embedding-space distance. Counterfactual querying does not optimize embedding similarity; it optimizes intervention cost $\omega$, which represents real-world effort, may be asymmetric or non-metric, and separates feasibility from effort by assigning infinite cost to infeasible interventions.
+
+\emph{Compared with nearest-neighbor search.} Nearest-neighbor search ranks tuples by a predefined metric. Counterfactual querying searches only over feasible, opposite-outcome instances, $\omega(q)=\{x_i:y_i\neq y_q,\ \omega(x_q,x_i)<\infty\}$, so admissibility and outcome \emph{define} the search space rather than rank neighbors within it.
+
+\emph{Compared with filtering.} Existing systems retrieve candidates and then apply filters. In counterfactual querying feasibility is not a post-processing step: it determines which instances are legal candidates in the first place, and therefore directly shapes query planning, indexing, and candidate generation.
+
+\emph{Compared with subset-selection pipelines.} Subset selection diversifies or reranks an already-retrieved candidate set. Counterfactual querying defines the answer as the optimizer of Eq.~(2), where intervention cost and the user-specified set objective $\Omega$ are optimized \emph{jointly}, so the set objective is part of the query semantics rather than a downstream stage.
+
+\textbf{Why counterfactual querying is a new primitive, not a composition of these components.}
+
+One could assemble a pipeline of vector search, filtering, reranking, and subset selection, but such a pipeline treats these operators as independent stages. Counterfactual querying instead defines a single declarative query whose semantics are jointly determined by the opposite-outcome predicate, admissibility, intervention cost $\omega$, and set objective $\Omega$. Because these components are coupled, they must be visible to the query optimizer as first-class constructs so the system can reason holistically about access paths, constraint pushdown, index construction, candidate generation, and set optimization. A staged pipeline can only approximate this behavior; it cannot express or optimize the coupled semantics as one query. Concretely, feasibility reshapes the search space rather than post-filtering it (Eq.~1), $\omega$ is an asymmetric, possibly non-metric cost that breaks the geometric assumption of existing indexes (P2), and $\Omega$ is a coupled set objective for which top-$k$ selection is optimal for \emph{none} of the objectives---confirmed empirically in Table~\ref{tab:quality}. This is precisely why elevating counterfactual reasoning to a \emph{first-class data management primitive}---with its own declarative semantics, optimization opportunities, indexing mechanisms, and execution strategies---is our contribution. We revised Sections~1 and~5.1 accordingly and added Table~\ref{tab:positioning} to make these distinctions explicit, and we position DcCA against feasibility-aware counterfactual methods such as FACE~\cite{poyiadzi2020face}, which constructs feasible paths over observed points but remains per-query and model-centric and lacks a first-class query model, cost specification $\omega$, and set objective $\Omega$.}
 
 \noindent\emph{Revision to Section~1:}
 \begin{quote}

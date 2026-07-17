@@ -6,18 +6,14 @@
 \end{itemize}
 \smallskip
 
-\jp{The answer to R4-O1, R4-W1 is not easy to read.  The reviewer may not remember the details of the paper.}
-
-\revision{We agree that the distinction from constrained retrieval should be explained more explicitly.
-
-Although both problems retrieve data subject to constraints, they answer fundamentally different questions. Constrained retrieval asks \emph{``Which existing objects satisfy a set of constraints?''} Counterfactual querying instead asks \emph{``What feasible changes to the query instance would lead to a different outcome?''} Consequently, the goal is not simply to retrieve constrained objects, but to identify actionable, outcome-changing alternatives together with the changes required to reach them.
-
-This difference leads to four key distinctions. First, the opposite-outcome predicate and admissibility constraints jointly define the feasible search space, rather than acting as filters on a similarity search. Second, candidates are ranked by intervention cost $\omega$, which models the effort required to change the query instance and is generally different from the geometric distance used by retrieval indexes. Third, the answer is a set of complementary counterfactuals that jointly optimize a user-specified objective $\Omega$ (e.g., diversity, robustness, or fairness), rather than independently ranked tuples. Finally, each returned counterfactual is accompanied by an interpretable edit $\Delta(\mathbf{x}_q,\mathbf{x})$ describing how the query instance should change, making the result actionable rather than merely retrieved.
-
-To make this distinction clearer, we revised Section~1 and added Table~\ref{tab:positioning}, which compares constrained retrieval, vector search, nearest-neighbor search, subset selection, FACE, and DcCA in terms of their query semantics rather than simply their implementation capabilities.}
-
 \noindent\textbf{Response.}
-We sharpen the distinction along three capabilities that constrained retrieval does not jointly provide: (i) an opposite-outcome predicate combined with admissibility that, per Eq.~(1), \emph{reshapes} the feasible space $\omega(q)$ rather than filtering a similarity ranking; (ii) a cost-faithful $\omega$ (P2) with \emph{``infeasible transformations \dots assigned infinite cost, cleanly separating feasibility from effort,''} which is asymmetric and not the index's geometric metric; and (iii) a coupled set-level objective $\Omega$ (P4, Eq.~2), which our new experiment shows is not reducible to top-$k$ ranking (Table~\ref{tab:quality}). Constrained retrieval also does not return the interpretable edit $\Delta(\mathbf{x}_q,\mathbf{x})$ that P1 requires. We add a positioning table (Table~\ref{tab:positioning}) and contrast with the feasibility-aware FACE~\cite{poyiadzi2020face}.
+\hw{We agree the distinction from constrained retrieval should be explained more explicitly, and we do so below.
+
+Although both problems retrieve data subject to constraints, they answer fundamentally different questions. Constrained retrieval asks \emph{``Which existing objects satisfy a set of constraints?''} Counterfactual querying asks \emph{``What feasible changes to the query instance would lead to a different outcome?''} The goal is thus not to retrieve constrained objects, but to identify actionable, outcome-changing alternatives together with the changes needed to reach them.
+
+This leads to four concrete distinctions. First, the opposite-outcome predicate and admissibility constraints jointly \emph{define} the feasible search space, rather than filter a similarity search. Second, candidates are ranked by intervention cost $\omega$---the effort to change the query instance---which is generally different from the geometric distance used by retrieval indexes. Third, the answer is a set of complementary counterfactuals that jointly optimize a user-specified objective $\Omega$ (e.g., diversity, robustness, or fairness), rather than independently ranked tuples; our new experiment shows this is not reducible to top-$k$ ranking (Table~\ref{tab:quality}). Fourth, each returned counterfactual carries an interpretable edit $\Delta(\mathbf{x}_q,\mathbf{x})$ describing how the query instance should change, making the result actionable rather than merely retrieved.
+
+To make this clearer, we revised Section~1 and added Table~\ref{tab:positioning}, which compares constrained retrieval, vector search, nearest-neighbor search, subset selection, FACE~\cite{poyiadzi2020face}, and DcCA in terms of their query semantics rather than their implementation capabilities.}
 
 \noindent\emph{Revision to Section~1:}
 \begin{quote}

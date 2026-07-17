@@ -5,28 +5,14 @@
 \end{itemize}
 \smallskip
 
-\jp{The response can be more direct.}
-
-\revision{
-Since DcCA retrieves counterfactuals from observed data, evidence availability is a fundamental aspect of the data-centric paradigm. We have revised the paper to explicitly discuss (i) the behavior when no feasible counterfactual exists, (ii) fallback strategies, and (iii) the trade-offs compared with model-centric and generative approaches.
-
-\textbf{What happens when no feasible counterfactual exists?}
-
-When no feasible counterfactual exists in the observed data under the specified constraints, DcCA returns the empty set. This is an intentional and informative outcome rather than a failure of the system. It certifies that no observed instance satisfies both the opposite-outcome predicate and the admissibility constraints under the current specification $\omega$. Unlike model-centric or generative approaches, which always synthesize a candidate, DcCA explicitly distinguishes between ``no feasible evidence exists'' and ``a feasible counterfactual exists,'' providing a verifiable answer grounded in the data.
-
-\textbf{What is the fallback strategy?}
-
-When the feasible set is empty or contains fewer than $k$ counterfactuals, DcCA provides a graded fallback strategy. First, it progressively relaxes user-specified soft constraints (e.g., increasing the intervention budget or relaxing non-essential preferences) while explicitly reporting the minimal relaxation required to restore feasibility. If no satisfactory data-grounded answer can be found, DcCA can optionally invoke a model-centric or generative counterfactual method as an explicitly labeled fallback. This clearly distinguishes retrieved counterfactuals that are supported by observed evidence from synthesized alternatives that are not.
-
-\textbf{What are the trade-offs compared with model-centric approaches?}
-
-The two paradigms are complementary rather than competing. Data-centric counterfactual analysis emphasizes realism, feasibility, provenance, and verifiability because every returned counterfactual corresponds to an observed instance. Its limitation is that it is naturally bounded by the coverage of the available data. In contrast, model-centric and generative methods can always produce a counterfactual, but the generated instance may not correspond to any observed data object or feasible intervention. Thus, data-centric methods prioritize trustworthy, evidence-supported recommendations, whereas model-centric methods prioritize coverage by synthesizing hypothetical alternatives.
-
-To clarify these points, we added a new paragraph, ``Evidence availability and failure behavior,'' in Section~2. The revision explicitly describes the empty-set semantics, partial-answer behavior, graded fallback strategy, and the complementary trade-offs between data-centric and model-centric counterfactual analysis.
-}
-
 \noindent\textbf{Response.}
-Our formulation already makes the failure case precise: by Eq.~(1) an instance is admissible \emph{``if and only if $\omega(\mathbf{x}_q,\mathbf{x})<\infty$,''} so when $\omega(q)=\varnothing$ no feasible, outcome-changing real instance exists. We argue this is an epistemic \emph{advantage}: DcCA \emph{certifies} infeasibility, whereas generative/model-centric methods~\cite{wachter2017counterfactual,mothilal2020explaining,schleich2021geco} always synthesize a candidate that, as we note in Section~1, \emph{``do[es] not necessarily correspond to real data objects or feasible interventions''}~\cite{delaney2021uncertaintyestimationoutofdistributiondetection,mahajan2019preserving}. Our new validity study makes this coverage effect concrete: in Table~\ref{tab:validity}, DcCA returns feasible, in-distribution counterfactuals whenever a matching instance exists, while for $16\%$ of queries no observed instance shares the query's immutable profile---exactly the empty-set/fallback regime---triggering the graded fallback below.
+\hw{Evidence availability is fundamental to a data-centric paradigm, and DcCA handles it explicitly. We answer the three parts directly.
+
+\textbf{When no feasible counterfactual exists, DcCA returns the empty set.} By Eq.~(1), an instance is admissible if and only if $\omega(\mathbf{x}_q,\mathbf{x})<\infty$; when $\omega(q)=\varnothing$, no observed instance satisfies both the opposite-outcome predicate and admissibility. Returning the empty set is an informative, verifiable outcome, not a failure: it \emph{certifies} infeasibility under the current $\omega$. This is an epistemic advantage---generative and model-centric methods always synthesize a candidate and cannot make this statement.
+
+\textbf{Fallback is graded.} When the feasible set is empty or has fewer than $k$ instances, DcCA (i) progressively relaxes user-specified soft constraints (e.g., raises the cost budget or relaxes non-essential preferences) and reports the \emph{minimal} relaxation that restores feasibility, and (ii) if no data-grounded answer is found, optionally hands off to a model-centric/generative method as an explicitly flagged, unverified fallback. This keeps evidence-supported answers clearly separated from synthesized ones.
+
+\textbf{Trade-offs are complementary, not competing.} Data-centric analysis guarantees realism, feasibility, provenance, and verifiability because every answer is an observed instance, but its coverage is bounded by $\mathcal{D}$. Model-centric/generative methods always produce an answer but the result may not correspond to any observed object or feasible intervention. Our new validity study makes the coverage effect concrete: in Table~\ref{tab:validity}, DcCA returns feasible, in-distribution counterfactuals whenever a matching instance exists, while for $16\%$ of queries no observed instance shares the query's immutable profile---exactly the empty-set/fallback regime. Coverage is itself measurable and grows with $\mathcal{D}$. We added a new paragraph, ``Evidence availability and failure behavior,'' to Section~2.}
 
 \noindent\emph{Revision to Section~2 (new paragraph ``Evidence availability and failure behavior''):}
 \begin{quote}

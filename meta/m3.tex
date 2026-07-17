@@ -5,26 +5,14 @@
 \end{itemize}
 \smallskip
 
-\jp{The answer to Meta-3 may not be easy to understand for reviewers. It is too technical and detailed. We need to make the response easier to understand. We can revise it so that it can be more intuitive.}
-
-\revision{Since our vision relies on constraint-aware retrieval, it is important to clarify that supporting constraints does not require validating every instance in the database or rebuilding indexes for every query. We have revised the paper to explain the practical realization of the framework more intuitively, including index construction, feasibility validation, and maintenance costs.
-
-\textbf{How are constraints enforced efficiently?}
-
-Our design follows a simple coarse-to-fine strategy. The system first uses lightweight constraints to quickly eliminate obviously infeasible candidates during retrieval. Only the small set of promising candidates is then subjected to more expensive feasibility checks (e.g., temporal, graph, or semantic validation). Consequently, expensive validation is performed only when necessary, and its cost depends on the candidate set rather than on the entire database.
-
-\textbf{How are indexes constructed and maintained?}
-
-The indexes are built offline and reused across many queries. Rather than constructing a separate index for every possible specification $\omega$, the system groups similar specifications into a small number of structural families that share the same index. As a result, index construction is amortized across queries, and updates to the database can be handled incrementally. If a query uses a specification outside the predefined families, the system simply falls back to a linear scan, ensuring that the framework remains correct while gracefully trading efficiency for flexibility.
-
-\textbf{What is the overall system overhead?}
-
-The main overhead comes from offline index construction, which is paid once and reused by subsequent queries. Online query processing is lightweight: candidate generation performs inexpensive pruning, expensive validation is limited to a small candidate pool, and set-level optimization operates only on this pool. Consequently, the online cost is largely independent of the database size once candidate retrieval has completed, which is also confirmed by our scalability experiments.
-
-To make these design choices explicit, we added a new paragraph, ``Practical realization and costs,'' in Section~5 and expanded the discussion in Section~2.2 to explain how index construction, constraint enforcement, validation, and maintenance are performed in practice.}
-
 \noindent\textbf{Response.}
-The offline phase (Section~2.2) already ties index design to the structure of $\omega$: \emph{``when $\omega$ mainly reweights dimensions, metric-aware structures (e.g., weighted KD-trees, ball trees, cover trees) enable efficient pruning''}~\cite{reif2022scalable}, and \emph{``when $\omega$ is dominated by discrete constraints, techniques such as partitioned indices, bitmap filtering, or inverted indices''}~\cite{lee2019constraint,chan1998bitmap,babenko2014inverted} apply. We make three costs explicit. First, indexing is amortized: $\mathcal{W}$ is partitioned into a small number of structural families that \emph{share} an index, so construction cost scales with the number of families, not $|\mathcal{W}|$, and is reused across queries. Second, feasibility validation is bounded by the coarse-to-fine design: expensive execution-/semantics-level checks run only on the small candidate pool $\mathcal{A}_\omega(q)$ (of size $m\ge k$), so validation cost scales with $|\mathcal{A}_\omega|$, not $|\mathcal{D}|$. Third, for $\omega\notin\mathcal{W}$ the paper already specifies that \emph{``the system falls back to a linear scan over $\mathcal{D}$,''} so the cost model degrades gracefully. Table~\ref{tab:scale} confirms that the online set-selection cost is essentially constant in $N$ while retrieval dominates scaling, motivating the constraint-aware index.
+\hw{The key intuition is that supporting constraints does \emph{not} require validating every instance in the database or rebuilding indexes for every query. We revised the paper to explain this more intuitively.
+
+\textbf{Constraints are enforced coarse-to-fine.} The system first uses cheap constraints to quickly discard obviously infeasible candidates during retrieval, and applies expensive feasibility checks (e.g., temporal, graph, or semantic validation) only to the small set of promising candidates. Expensive validation therefore runs only when necessary, and its cost depends on the candidate set, not the whole database.
+
+\textbf{Indexes are built once and reused.} Instead of one index per specification $\omega$, the system groups similar specifications into a few structural families that share the same index. Index construction is thus amortized across queries, and database updates are handled incrementally. If a query's $\omega$ falls outside the predefined families, the system simply falls back to a linear scan, so the framework stays correct while gracefully trading efficiency for flexibility.
+
+\textbf{Overall overhead is dominated by offline indexing, paid once.} Online processing is lightweight: candidate generation does cheap pruning, expensive validation is confined to a small pool, and set-level optimization operates only on that pool. Consequently, once candidate retrieval completes, online cost is largely independent of database size---confirmed by our scalability study (Table~\ref{tab:scale}), where the set-selection step is essentially constant in $N$. We added a new paragraph, ``Practical realization and costs,'' to Section~5 and expanded Section~2.2 accordingly.}
 
 \noindent\emph{Revision to Section~5 (new paragraph ``Practical realization and costs''):}
 \begin{quote}
