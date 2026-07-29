@@ -26,7 +26,7 @@ GeCo (genetic)~\cite{schleich2021geco}        & 80.8  & 0.0  & 0.7   & 20.24 & 1
 \end{tabular}
 \end{table}
 
-\noindent\emph{Revision (Section~5 summary; details in Appendix~A):}
+\noindent\emph{Revision (Section~6 summary; details in Appendix~A):}
 \begin{quote}
-\textcolor{blue}{We distinguish two baseline categories with different purposes: retrieval/indexing baselines (DuckDB, KD-Tree, BM25) characterize efficiency, while counterfactual generators (FACE, DiCE, Wachter, GeCo) characterize counterfactual capability. On the latter, DcCA returns feasible, grounded, in-distribution counterfactuals by construction and the most diverse valid set, whereas model-centric methods achieve smaller nominal distance at the cost of feasibility and realism (Table~4).}
+\textcolor{blue}{Beyond runtime, we further study counterfactual \emph{quality}---collective-validity objectives, a comparison against representative counterfactual generators (FACE, DiCE, Wachter, GeCo), and approximation/scalability---together with the practical index-construction and maintenance costs; for space, these are reported in Appendix~A. In brief, objective-specific set selection improves every collective-validity objective over top-$k$ (which is best for none), and \textbf{DcCA} uniquely returns feasible, in-distribution counterfactuals whereas model-centric generators are infeasible and off-manifold.}
 \end{quote}

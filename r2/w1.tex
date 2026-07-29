@@ -11,5 +11,5 @@ We add an explicit cost analysis. As stated in Section~2.2, the index design fol
 
 \noindent\emph{Revision (Appendix~A, ``Practical realization and costs''):}
 \begin{quote}
-\textcolor{blue}{$\mathcal{W}$ is partitioned into structural families, each served by one reusable index; index construction is therefore amortized across queries and scales with the number of families rather than $|\mathcal{W}|$. Under insertions/deletions/updates to $\mathcal{D}$ the index is maintained incrementally, and a query whose $\omega\notin\mathcal{W}$ falls back to a linear scan, so the cost model degrades gracefully.}
+\textcolor{blue}{The offline index is amortized across queries: the specification family $\mathcal W$ is partitioned into a small number of structural families (metric-reweighting vs.\ discrete-constraint dominated), each served by one reusable index, so construction cost scales with the number of families rather than $|\mathcal W|$. Under insertions and deletions to $\mathcal D$ the index is maintained incrementally, and a query whose $\omega\notin\mathcal W$ falls back to a linear scan, so the cost model degrades gracefully.}
 \end{quote}

@@ -17,5 +17,9 @@ To make this clearer, we revised Section~1 and added Table~\ref{tab:positioning}
 
 \noindent\emph{Revision to Section~1:}
 \begin{quote}
-\textcolor{blue}{Counterfactual querying differs from constrained retrieval in what it optimizes: feasibility and the opposite-outcome predicate define the search space (not a filter), the cost $\omega$ is an asymmetric intervention effort (not the index metric), the answer optimizes a coupled set objective $\Omega$ (not independent ranking), and each result carries an interpretable edit $\Delta$. Constrained retrieval provides none of these jointly.}
+{\color{blue}Our goal is not to develop another counterfactual generation algorithm, but to establish \emph{counterfactual querying} as a first-class data management primitive. The challenge is therefore not generating a counterfactual, but designing the query abstraction, indexing mechanisms, optimization strategies, and execution model for counterfactual reasoning as a recurring database operation.
+
+From this perspective, counterfactual querying differs fundamentally from existing retrieval pipelines. While existing systems compose vector search, filtering, reranking, and subset selection to retrieve similar objects, counterfactual querying asks \emph{which feasible interventions would change the outcome?} Accordingly, the opposite-outcome predicate and admissibility define the feasible search space, intervention cost $\omega$ replaces geometric similarity as the optimization objective, and the answer is a set of complementary counterfactuals that jointly optimizes a user-specified objective $\Omega$.
+
+These semantics cannot be captured by composing existing retrieval operators. Treating retrieval, feasibility, intervention cost, and set selection as separate stages prevents holistic optimization and obscures the query semantics. We therefore elevate the opposite-outcome predicate, intervention cost $\omega$, and set objective $\Omega$ to first-class query constructs, enabling future data systems to optimize counterfactual reasoning as a native database operation.}
 \end{quote}

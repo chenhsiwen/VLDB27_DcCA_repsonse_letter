@@ -26,26 +26,29 @@ One could assemble a pipeline of vector search, filtering, reranking, and subset
 
 \noindent\emph{Revision to Section~1:}
 \begin{quote}
-\textcolor{blue}{Counterfactual querying is not a composition of vector search, filtering, and subset selection. The opposite-outcome predicate and admissibility jointly define the feasible space rather than filter a similarity ranking; the cost $\omega$ is an asymmetric, possibly non-metric intervention effort rather than the index metric; and the answer optimizes a coupled set-level objective $\Omega$ rather than ranking tuples independently. Staging these as separate components---the only option in current systems---returns infeasible candidates, relies on post-hoc validation, and cannot jointly optimize $\Omega$; making $\omega$, the counterfactual predicate, and $\Omega$ first-class is precisely our contribution.}
+{\color{blue}Our goal is not to develop another counterfactual generation algorithm, but to establish \emph{counterfactual querying} as a first-class data management primitive. The challenge is therefore not generating a counterfactual, but designing the query abstraction, indexing mechanisms, optimization strategies, and execution model for counterfactual reasoning as a recurring database operation.
+
+From this perspective, counterfactual querying differs fundamentally from existing retrieval pipelines. While existing systems compose vector search, filtering, reranking, and subset selection to retrieve similar objects, counterfactual querying asks \emph{which feasible interventions would change the outcome?} Accordingly, the opposite-outcome predicate and admissibility define the feasible search space, intervention cost $\omega$ replaces geometric similarity as the optimization objective, and the answer is a set of complementary counterfactuals that jointly optimizes a user-specified objective $\Omega$.
+
+These semantics cannot be captured by composing existing retrieval operators. Treating retrieval, feasibility, intervention cost, and set selection as separate stages prevents holistic optimization and obscures the query semantics. We therefore elevate the opposite-outcome predicate, intervention cost $\omega$, and set objective $\Omega$ to first-class query constructs, enabling future data systems to optimize counterfactual reasoning as a native database operation.}
 \end{quote}
 
-\noindent\emph{New positioning table (Section~1 / Section~5.1):}
+\noindent\emph{New positioning table (Section~6):}
 \begin{table}[h]
-\centering\small
-\caption{Capabilities required by counterfactual querying vs.\ existing paradigms.}
+\centering\footnotesize
+\setlength{\tabcolsep}{4pt}
+\caption{Capabilities required by counterfactual querying vs.\ existing paradigms; only \textbf{DcCA} provides all jointly. \emph{Opposite}: opposite-outcome predicate; \emph{Cost}: non-metric, asymmetric transformation cost $\omega$; \emph{Feasib.}: feasibility reshapes the search space (not a post-filter); \emph{Set}: set-level objective $\Omega$; \emph{Edit}: interpretable edit $\Delta$.}
 \label{tab:positioning}
-\resizebox{\linewidth}{!}{%
-\begin{tabular}{lccccc}
+\begin{tabular}{@{}lccccc@{}}
 \toprule
-& Opp.-outcome & Non-metric & Feasibility & Set-level & Interpretable \\
-& predicate & cost $\omega$ & reshapes space & objective $\Omega$ & edit $\Delta$ \\
+Paradigm & Opposite & Cost & Feasib. & Set & Edit \\
 \midrule
-Constrained retrieval        & No      & No      & Partial & No      & No \\
-Vector DB / ANN~\cite{pgvector,malkov2018efficient} & No & No & No & No & No \\
-Nearest-neighbor search      & No      & No      & No      & No      & No \\
-Subset selection~\cite{borodin2017max} & No & No & No & Yes & No \\
-FACE~\cite{poyiadzi2020face} & Yes     & Partial & Partial & No      & Partial \\
-\textbf{DcCA (ours)}         & Yes     & Yes     & Yes     & Yes     & Yes \\
+Constrained retrieval~\cite{lee2019constraint}      & No  & No      & Partial & No  & No \\
+Vector DB / ANN~\cite{pgvector,malkov2018efficient} & No  & No      & No      & No  & No \\
+NN search~\cite{indyk1998approximate}               & No  & No      & No      & No  & No \\
+Subset selection~\cite{borodin2017max}              & No  & No      & No      & Yes & No \\
+FACE~\cite{poyiadzi2020face}                        & Yes & Partial & Partial & No  & Partial \\
+\textbf{DcCA (ours)}                                & Yes & Yes     & Yes     & Yes & Yes \\
 \bottomrule
-\end{tabular}}
+\end{tabular}
 \end{table}
