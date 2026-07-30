@@ -6,13 +6,13 @@
 \smallskip
 
 \noindent\textbf{Response.}
-\hw{The key intuition is that supporting constraints does \emph{not} require validating every instance in the database or rebuilding indexes for every query. We revised the paper to explain this more intuitively.
+The key intuition is that supporting constraints does \emph{not} require validating every instance in the database or rebuilding indexes for every query. We revised the paper to explain this more intuitively.
 
 \textbf{Constraints are enforced coarse-to-fine.} The system first uses cheap constraints to quickly discard obviously infeasible candidates during retrieval, and applies expensive feasibility checks (e.g., temporal, graph, or semantic validation) only to the small set of promising candidates. Expensive validation therefore runs only when necessary, and its cost depends on the candidate set, not the whole database.
 
 \textbf{Indexes are built once and reused.} Instead of one index per specification $\omega$, the system groups similar specifications into a few structural families that share the same index. Index construction is thus amortized across queries, and database updates are handled incrementally. If a query's $\omega$ falls outside the predefined families, the system simply falls back to a linear scan, so the framework stays correct while gracefully trading efficiency for flexibility.
 
-\textbf{Overall overhead is dominated by offline indexing, paid once.} Online processing is lightweight: candidate generation does cheap pruning, expensive validation is confined to a small pool, and set-level optimization operates only on that pool. Consequently, once candidate retrieval completes, online cost is largely independent of database size---confirmed by our scalability study (Table~\ref{tab:scale}), where the set-selection step is essentially constant in $N$. For space, we report these index-construction and maintenance costs in a ``Practical realization and costs'' paragraph in Appendix~A, while constraint enforcement and feasibility validation are detailed in Section~2.2.}
+\textbf{Overall overhead is dominated by offline indexing, paid once.} Online processing is lightweight: candidate generation does cheap pruning, expensive validation is confined to a small pool, and set-level optimization operates only on that pool. Consequently, once candidate retrieval completes, online cost is largely independent of database size---confirmed by our scalability study (Table~\ref{tab:scale}), where the set-selection step is essentially constant in $N$. For space, we report these index-construction and maintenance costs in a ``Practical realization and costs'' paragraph in Appendix~A, while constraint enforcement and feasibility validation are detailed in Section~2.2.
 
 \noindent\emph{Revision (feasibility validation in Section~3):}
 \begin{quote}

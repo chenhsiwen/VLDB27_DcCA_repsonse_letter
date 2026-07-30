@@ -7,13 +7,13 @@
 \smallskip
 
 \noindent\textbf{Response.}
-\hw{We agree the distinction from constrained retrieval should be explained more explicitly, and we do so below.
+We agree the distinction from constrained retrieval should be explained more explicitly, and we do so below.
 
 Although both problems retrieve data subject to constraints, they answer fundamentally different questions. Constrained retrieval asks \emph{``Which existing objects satisfy a set of constraints?''} Counterfactual querying asks \emph{``What feasible changes to the query instance would lead to a different outcome?''} The goal is thus not to retrieve constrained objects, but to identify actionable, outcome-changing alternatives together with the changes needed to reach them.
 
 This leads to four concrete distinctions. First, the opposite-outcome predicate and admissibility constraints jointly \emph{define} the feasible search space, rather than filter a similarity search. Second, candidates are ranked by intervention cost $\omega$---the effort to change the query instance---which is generally different from the geometric distance used by retrieval indexes. Third, the answer is a set of complementary counterfactuals that jointly optimize a user-specified objective $\Omega$ (e.g., diversity, robustness, or fairness), rather than independently ranked tuples; our new experiment shows this is not reducible to top-$k$ ranking (Table~\ref{tab:quality}). Fourth, each returned counterfactual carries an interpretable edit $\Delta(\mathbf{x}_q,\mathbf{x})$ describing how the query instance should change, making the result actionable rather than merely retrieved.
 
-To make this clearer, we revised Section~1 and added Table~\ref{tab:positioning}, which compares constrained retrieval, vector search, nearest-neighbor search, subset selection, FACE~\cite{poyiadzi2020face}, and DcCA in terms of their query semantics rather than their implementation capabilities.}
+To make this clearer, we revised Section~1 and added Table~\ref{tab:positioning}, which compares constrained retrieval, vector search, nearest-neighbor search, subset selection, FACE~\cite{poyiadzi2020face}, and DcCA in terms of their query semantics rather than their implementation capabilities.
 
 \noindent\emph{Revision to Section~1:}
 \begin{quote}
