@@ -11,7 +11,7 @@ We agree that the original baselines measure retrieval efficiency, not counterfa
 
 \begin{table}[h]
 \centering\small
-\caption{Counterfactual capability: DcCA vs.\ model-centric generators. \emph{Controlled simulation on synthetic tabular data ($N{=}6000$, $3$ categorical immutable attributes, $k{=}5$, $150$ queries) with reference reimplementations of each method's core mechanism---not the released libraries and not UCI data. Full-library results (incl.\ DACE~\cite{kanamori2020dace}, prototype-CF~\cite{vanlooveren2020interpretable}) on Adult, German-Credit, and HELOC are to follow.} Higher is better except Cost.}
+\caption{Counterfactual capability: DcCA vs.\ model-centric generators. \emph{Controlled simulation on synthetic tabular data ($N{=}6000$, $3$ categorical immutable attributes, $k{=}5$, $150$ queries) with reference reimplementations of each method's core mechanism---not the released libraries and not UCI data. Full-library results (incl.\ DACE~\cite{kanamori2020dace}, prototype-CF~\cite{vanlooveren2020interpretable}) on Adult, German-Credit, and HELOC are to follow. \bb{Are we doing additional experiments? If not we should delete this}} Higher is better except Cost.}
 \label{tab:baselines}
 \begin{tabular}{lrrrrr}
 \toprule
@@ -19,8 +19,8 @@ Method & Valid.\% & Feas.\% & In-dist.\% & $\Omega_{\text{div}}$ & Cost \\
 \midrule
 \textbf{DcCA (data-centric)}        & 100.0 & \textbf{64.7} & \textbf{100.0} & \textbf{27.08} & 4.09 \\
 FACE (data-path)~\cite{poyiadzi2020face}      & 100.0 & 1.9  & 100.0 & 17.29 & 2.83 \\
-DiCE (diverse grad)~\cite{mothilal2020explaining}   & 100.0 & 0.0  & 1.1   & 9.32  & 1.73 \\
-Wachter (grad)~\cite{wachter2017counterfactual}        & 100.0 & 0.0  & 0.0   & 2.27  & \textbf{1.89} \\
+DiCE (diverse grad)~\cite{mothilal2020explaining}   & 100.0 & 0.0  & 1.1   & 9.32  & \textbf{1.73} \\
+Wachter (grad)~\cite{wachter2017counterfactual}        & 100.0 & 0.0  & 0.0   & 2.27  & 1.89 \\
 GeCo (genetic)~\cite{schleich2021geco}        & 80.8  & 0.0  & 0.7   & 20.24 & 1.77 \\
 \bottomrule
 \end{tabular}

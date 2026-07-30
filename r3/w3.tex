@@ -9,7 +9,7 @@
 
 \emph{(1) Set quality (not only runtime).} We now evaluate the three Section~4 objectives. Table~\ref{tab:quality} (in our response to Meta-5) shows that objective-specific set selection improves $\Omega_{\text{div}}$, $\Omega_{\text{rob}}$, and $\Omega_{\text{fair}}$ over top-$k$ lowest-cost, and that top-$k$ is optimal for none.
 
-\emph{(2) Empty Set column.} The blank was because the baseline systems do not natively perform set-level selection. In the revision we give each baseline a fair Set step (generic top-$k$ with post-hoc diversity re-ranking) and report its set quality; where a system genuinely cannot, we mark it N/A with an explicit footnote rather than leaving a blank.
+\emph{(2) Empty Set column.} The blank was because the baseline systems do not natively perform set-level selection. In the revision we give each baseline a fair Set step (generic top-$k$ with post-hoc diversity re-ranking) and report its set quality; where a system genuinely cannot, we mark it N/A with an explicit footnote rather than leaving a blank. \bb{it doesn't look like we are doing this in the main manuscript. N/A still exists in Table 1.}
 
 \emph{(3) Comparability and ANN.} We agree that approximate nearest-neighbor search applies to embedding vectors. Table~\ref{tab:ann} reports an exact-vs-approximate study: coarse-quantized (IVF-style) retrieval reaches recall@$100=0.94$ at $9.4\times$ and $1.00$ at $5.6\times$ speedup over exact search, so quality is preserved under approximation. We also state the determinism and embedding-dependence caveats explicitly.
 
